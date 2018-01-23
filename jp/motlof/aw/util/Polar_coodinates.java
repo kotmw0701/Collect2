@@ -17,6 +17,7 @@ public class Polar_coodinates implements Cloneable{
 	}
 	
 	public Polar_coodinates(Location bukkitlocation) {
+		this.world = bukkitlocation.getWorld();
 		this.radius = bukkitlocation.distance(new Location(bukkitlocation.getWorld(), 0, 0, 0));
 		double x = bukkitlocation.getX(), y = bukkitlocation.getY(), z = bukkitlocation.getZ();
 		this.theta = Math.acos(z/Math.sqrt(Math.pow(x, 2)+Math.pow(y, 2)+Math.pow(z, 2)));
