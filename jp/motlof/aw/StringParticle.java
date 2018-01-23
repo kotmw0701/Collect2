@@ -1,11 +1,8 @@
 package jp.motlof.aw;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -14,19 +11,22 @@ import org.bukkit.scheduler.BukkitRunnable;
 import jp.motlof.aw.util.DetailsColor;
 import jp.motlof.aw.util.Polar_coodinates;
 
-public class ImageParticle extends BukkitRunnable {
+public class StringParticle extends BukkitRunnable {
 	
 	Location location;
 	BufferedImage image;
 	int w, h;
 	double separate;
 	
-	public ImageParticle(File file, Location location, double separate) throws IOException {
-		this.location = location.clone();
-		this.separate = (separate <= 0) ? 0.2 : separate;
-		image = ImageIO.read(file);
-		w = image.getWidth();
-		h = image.getHeight();
+	public StringParticle(String string, Location location, double separate) {
+		this.location = location;
+		this.separate = separate;
+		w = string.length()*16;
+		h = 16;
+		image = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D graphics2d = image.createGraphics();
+		graphics2d.setBackground(new Color(255, 255, 255, 0));
+		graphics2d.drawString(string, 0, 14);
 	}
 
 	@Override

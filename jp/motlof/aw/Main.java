@@ -1,7 +1,6 @@
 package jp.motlof.aw;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -20,6 +19,8 @@ public class Main extends JavaPlugin {
 	public static double radius = 0.15;
 	
 	private RotateCube cube;
+	private ImageParticle imageParticle;
+	private StringParticle stringParticle;
 	
 	@Override
 	public void onEnable() {
@@ -62,15 +63,25 @@ public class Main extends JavaPlugin {
 			}
 			return true;
 		}
-		if(args.length == 1 && "image".equalsIgnoreCase(args[0])) {
-			ImageParticle imageParticle;
+		if(args.length == 3 && "image".equalsIgnoreCase(args[0])) {
+			if(imageParticle != null) imageParticle.cancel();
+			if(args[1] == null || !(new File("C:\\Server\\"+args[1]+".png").exists()))
+				return false;
 			try {
-				imageParticle = new ImageParticle(new File("C:\\Server\\rabiribi-cocoa.png"), player.getLocation());
-			} catch (IOException e) {
+				imageParticle = new ImageParticle(new File("C:\\Server\\"+args[1]+".png"), player.getLocation(), Double.parseDouble(args[2]));
+			} catch (Exception e) {
 				e.printStackTrace();
 				return false;
 			}
 			imageParticle.runTaskTimer(Main.main, 0, 1);
+		}
+		if(args.length == 3 && "string".equalsIgnoreCase(args[0])) {
+			if(stringParticle != null) stringParticle.cancel();
+			if(args[1] == null)
+				return false;
+			stringParticle = new StringParticle(args[1], player.getLocation(), Double.parseDouble(args[2]));
+			stringParticle.runTaskTimer(Main.main, 0, 1);
+			return true;
 		}
 		return false;
 	}
