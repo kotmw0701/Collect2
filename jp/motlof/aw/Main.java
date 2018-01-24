@@ -1,6 +1,7 @@
 package jp.motlof.aw;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -21,6 +22,7 @@ public class Main extends JavaPlugin {
 	private RotateCube cube;
 	private ImageParticle imageParticle;
 	private StringParticle stringParticle;
+	private WingParticle wingParticle;
 	
 	@Override
 	public void onEnable() {
@@ -82,6 +84,15 @@ public class Main extends JavaPlugin {
 			stringParticle = new StringParticle(args[1], player.getLocation(), Double.parseDouble(args[2]));
 			stringParticle.runTaskTimer(Main.main, 0, 1);
 			return true;
+		}
+		if(args.length == 2 && "wing".equalsIgnoreCase(args[0])) {
+			if(wingParticle != null) wingParticle.cancel();
+			try {
+				wingParticle = new WingParticle(player, Double.parseDouble(args[1]));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			wingParticle.runTaskTimer(Main.main, 0, 1);
 		}
 		return false;
 	}

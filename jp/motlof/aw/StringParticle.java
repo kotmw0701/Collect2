@@ -22,11 +22,14 @@ public class StringParticle extends BukkitRunnable {
 		this.location = location;
 		this.separate = separate;
 		w = string.length()*16;
-		h = 16;
+		h = count(string, "%n")*16;
 		image = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D graphics2d = image.createGraphics();
 		graphics2d.setBackground(new Color(255, 255, 255, 0));
-		graphics2d.drawString(string, 0, 14);
+		graphics2d.setColor(Color.black);
+		int i = 0;
+		for(String string2 : string.split("%n"))
+			graphics2d.drawString(string2.replaceAll("_", " "), 0, 14+(16*++i));
 	}
 
 	@Override
@@ -41,5 +44,10 @@ public class StringParticle extends BukkitRunnable {
 				location.getWorld().spawnParticle(Particle.REDSTONE, location.clone().add(pCoodinates.rotation_Xaxis(Math.toRadians(180))), 0, color.getRed(), color.getGreen(), color.getBlue(), 1);
 			}
 		}
+	}
+	
+	private int count(String string, String target) {
+		int i = (string.length() - string.replaceAll(target, "").length() / target.length());
+		return i <= 0 ? 1 : i; 
 	}
 }
