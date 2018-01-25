@@ -7,13 +7,15 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import jp.motlof.aw.util.DetailsColor;
 import jp.motlof.aw.util.DetailsColor.DetailsColorType;
+import jp.motlof.aw.util.ParticleAPI;
+import jp.motlof.aw.util.ParticleAPI.EnumParticle;
 import jp.motlof.aw.util.Polar_coodinates;
 
 public class WingParticle extends BukkitRunnable {
@@ -44,9 +46,9 @@ public class WingParticle extends BukkitRunnable {
 					if(new Color(image.getRGB(x, y), true).getAlpha() == 0)
 						continue;
 					Polar_coodinates pCoodinates = new Polar_coodinates(new Location(location.getWorld(), x*separate, y*separate, 0)).add(0, 0, Math.toRadians(180));
-					location.getWorld().spawnParticle(Particle.REDSTONE, location.clone().add(pCoodinates.rotation_Yaxis(Math.toRadians(-30-location.getYaw()))).add(0, h*separate, 0), 0, color.getRed(), color.getGreen(), color.getBlue(), 1);
+					sendParticle(location.clone().add(pCoodinates.rotation_Yaxis(Math.toRadians(-30-location.getYaw()))).add(0, h*separate, 0), color);
 					if(i == 1) {
-						location.getWorld().spawnParticle(Particle.REDSTONE, location.clone().add(pCoodinates.rotation_Yaxis(Math.toRadians(-150-location.getYaw()))).add(0, h*separate, 0), 0, color.getRed(), color.getGreen(), color.getBlue(), 1);
+						sendParticle(location.clone().add(pCoodinates.rotation_Yaxis(Math.toRadians(-150-location.getYaw()))).add(0, h*separate, 0), color);
 					}
 				}
 			}
@@ -57,12 +59,18 @@ public class WingParticle extends BukkitRunnable {
 					if(new Color(image2.getRGB(x, y), true).getAlpha() == 0)
 						continue;
 					Polar_coodinates pCoodinates = new Polar_coodinates(new Location(location.getWorld(), x*separate, y*separate, 0)).add(0, 0, Math.toRadians(150));
-					location.getWorld().spawnParticle(Particle.REDSTONE, location.clone().add(pCoodinates.rotation_Yaxis(Math.toRadians(-60-location.getYaw()))).add(0, 2.5, 0), 0, color.getRed(), color.getGreen(), color.getBlue(), 1);
+					sendParticle(location.clone().add(pCoodinates.rotation_Yaxis(Math.toRadians(-60-location.getYaw()))).add(0, 2.5, 0), color);
 					if(i == 1) {
-						location.getWorld().spawnParticle(Particle.REDSTONE, location.clone().add(pCoodinates.rotation_Yaxis(Math.toRadians(-120-location.getYaw()))).add(0, 2.5, 0), 0, color.getRed(), color.getGreen(), color.getBlue(), 1);
+						sendParticle(location.clone().add(pCoodinates.rotation_Yaxis(Math.toRadians(-120-location.getYaw()))).add(0, 2.5, 0), color);
 					}
 				}
 			}
 		}
+	}
+	
+	private void sendParticle(Location location, DetailsColor color) {
+		for(Player player : Bukkit.getOnlinePlayers())
+			if(player.getWorld().getName().equalsIgnoreCase(location.getWorld().getName()))
+				new ParticleAPI.Particle(EnumParticle.REDSTONE, location, color.getRed(), color.getGreen(), color.getBlue(), 1).sendParticle(player);
 	}
 }
