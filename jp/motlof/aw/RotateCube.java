@@ -9,8 +9,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.EulerAngle;
 
-import jp.motlof.aw.util.DetailsColor;
-import jp.motlof.aw.util.DetailsColor.DetailsColorType;
+import jp.motlof.core.api.DetailsColor;
+import jp.motlof.core.api.DetailsColor.DetailsColorType;
 
 public class RotateCube extends BukkitRunnable {
 

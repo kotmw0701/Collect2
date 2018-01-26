@@ -12,11 +12,11 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import jp.motlof.aw.util.DetailsColor;
-import jp.motlof.aw.util.DetailsColor.DetailsColorType;
-import jp.motlof.aw.util.ParticleAPI;
-import jp.motlof.aw.util.ParticleAPI.EnumParticle;
-import jp.motlof.aw.util.Polar_coodinates;
+import jp.motlof.core.api.DetailsColor;
+import jp.motlof.core.api.Polar_coodinates;
+import jp.motlof.core.api.DetailsColor.DetailsColorType;
+import jp.motlof.core.api.particle.ParticleAPI;
+import jp.motlof.core.api.particle.ParticleAPI.EnumParticle;
 
 public class WingParticle extends BukkitRunnable {
 	
