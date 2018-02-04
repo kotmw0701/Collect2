@@ -1,5 +1,6 @@
 package jp.motlof.aw;
 
+import java.awt.Font;
 import java.io.File;
 import java.io.IOException;
 
@@ -21,6 +22,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.EulerAngle;
 
+import jp.motlof.core.api.particle.ParticleAPI.EnumParticle;
 import jp.motlof.core.api.particle.PixelArtParticle;
 import net.minecraft.server.v1_12_R1.NBTTagCompound;
 import net.minecraft.server.v1_12_R1.TileEntity;
@@ -97,11 +99,11 @@ public class Main extends JavaPlugin implements Listener{
 			};
 			iBukkitRunnable.runTaskTimer(Main.main, 0, 1);
 		}
-		if(args.length == 3 && "string".equalsIgnoreCase(args[0])) {
+		if(args.length == 4 && "string".equalsIgnoreCase(args[0])) {
 			if(sBukkitRunnable != null) sBukkitRunnable.cancel();
 			if(args[1] == null)
 				return false;
-			PixelArtParticle stringParticle = new PixelArtParticle(args[1], player.getLocation(), Double.parseDouble(args[2]));
+			PixelArtParticle stringParticle = new PixelArtParticle(args[1], player.getLocation(), Double.parseDouble(args[2]), EnumParticle.REDSTONE, new Font(args[3], Font.PLAIN, 24));
 			sBukkitRunnable = new BukkitRunnable() {
 				@Override
 				public void run() {
