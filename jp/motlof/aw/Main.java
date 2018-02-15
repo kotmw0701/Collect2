@@ -7,6 +7,7 @@ import java.io.IOException;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
@@ -20,8 +21,10 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.BlockIterator;
 import org.bukkit.util.EulerAngle;
 
+import jp.motlof.core.api.Translate;
 import jp.motlof.core.api.particle.ParticleAPI.EnumParticle;
 import jp.motlof.core.api.particle.PixelArtParticle;
 import net.minecraft.server.v1_12_R1.NBTTagCompound;
@@ -103,13 +106,17 @@ public class Main extends JavaPlugin implements Listener{
 			if(sBukkitRunnable != null) sBukkitRunnable.cancel();
 			if(args[1] == null)
 				return false;
-			PixelArtParticle stringParticle = new PixelArtParticle(args[1], player.getLocation(), Double.parseDouble(args[2]), EnumParticle.REDSTONE, new Font(args[3], Font.PLAIN, 24));
-			sBukkitRunnable = new BukkitRunnable() {
-				@Override
-				public void run() {
-					stringParticle.show();
-				}
-			};
+			try { 
+				PixelArtParticle stringParticle = new PixelArtParticle(args[1], player.getLocation(), Double.parseDouble(args[2]), EnumParticle.REDSTONE, new Font(args[3], Font.PLAIN, 24));
+				sBukkitRunnable = new BukkitRunnable() {
+					@Override
+					public void run() {
+						stringParticle.show();
+					}
+				};
+			} catch (IllegalArgumentException e) {
+				player.sendMessage("そのフォントは使用できません");
+			}
 			sBukkitRunnable.runTaskTimer(Main.main, 0, 1);
 			return true;
 		}
@@ -122,6 +129,12 @@ public class Main extends JavaPlugin implements Listener{
 			}
 			wingParticle.runTaskTimer(Main.main, 0, 1);
 		}
+		if(args.length == 1 && "getitem".equalsIgnoreCase(args[0])) {
+			Block block = getTarget(player);
+			if(block == null || block.getType() == Material.AIR)
+				return false;
+			player.spigot().sendMessage(Translate.getComponent(block));
+		}
 		return false;
 	}
 	
@@ -129,6 +142,18 @@ public class Main extends JavaPlugin implements Listener{
 		Location location = base.clone();
 		location.add(0, Math.cos(Math.toRadians(x+180))*radius, Math.sin(Math.toRadians(x+180))*radius);
 		return location;
+	}
+	
+	Block getTarget(Player player) {
+		BlockIterator iterator = new BlockIterator(player, 5);
+		Block block = iterator.next();
+		while(iterator.hasNext()) {
+			block = iterator.next();
+			if(block.getType() == Material.AIR)
+				continue;
+			break;
+		}
+		return block;
 	}
 	
 	@EventHandler
