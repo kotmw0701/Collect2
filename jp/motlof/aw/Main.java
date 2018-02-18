@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
@@ -24,9 +25,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BlockIterator;
 import org.bukkit.util.EulerAngle;
 
-import jp.motlof.core.api.Translate;
-import jp.motlof.core.api.particle.ParticleAPI.EnumParticle;
-import jp.motlof.core.api.particle.PixelArtParticle;
+import jp.kotmw.core.nms.Translate;
+import jp.kotmw.core.nms.particle.ParticleAPI.EnumParticle;
+import jp.kotmw.core.nms.particle.PixelArtParticle;
+import jp.kotmw.core.nms.particle.magicsquare.Magic_square;
 import net.minecraft.server.v1_12_R1.NBTTagCompound;
 import net.minecraft.server.v1_12_R1.TileEntity;
 import net.minecraft.server.v1_12_R1.TileEntityEnchantTable;
@@ -53,6 +55,24 @@ public class Main extends JavaPlugin implements Listener{
 	}
 	
 	public boolean onCommand(CommandSender s, Command cmd, String label, String[] args) {
+		if(s instanceof BlockCommandSender) {
+			if(args.length == 2 && "magic".equalsIgnoreCase(args[0])) {
+				Magic_square square = new Magic_square(((BlockCommandSender) s).getBlock().getLocation(), args[1]);
+				BukkitRunnable runnable = new BukkitRunnable() {
+					int count = 0;
+					@Override
+					public void run() {
+						if(count >= 100) {
+							this.cancel();
+							return;
+						}
+						square.show();
+						count++;
+					}
+				};
+				runnable.runTaskTimer(this, 0, 1);
+			}
+		}
 		if(!(s instanceof Player))
 			return false;
 		Player player = (Player) s;
@@ -129,11 +149,27 @@ public class Main extends JavaPlugin implements Listener{
 			}
 			wingParticle.runTaskTimer(Main.main, 0, 1);
 		}
-		if(args.length == 1 && "getitem".equalsIgnoreCase(args[0])) {
+		if(args.length == 1 && "getblock".equalsIgnoreCase(args[0])) {
 			Block block = getTarget(player);
 			if(block == null || block.getType() == Material.AIR)
 				return false;
 			player.spigot().sendMessage(Translate.getComponent(block));
+		}
+		if(args.length == 2 && "magic".equalsIgnoreCase(args[0])) {
+			Magic_square square = new Magic_square(((BlockCommandSender) s).getBlock().getLocation(), args[1]);
+			BukkitRunnable runnable = new BukkitRunnable() {
+				int count = 0;
+				@Override
+				public void run() {
+					if(count >= 100) {
+						this.cancel();
+						return;
+					}
+					square.show();
+					count++;
+				}
+			};
+			runnable.runTaskTimer(this, 0, 1);
 		}
 		return false;
 	}
