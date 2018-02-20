@@ -4,21 +4,16 @@ import java.awt.Font;
 import java.io.File;
 import java.io.IOException;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -29,9 +24,6 @@ import jp.kotmw.core.nms.Translate;
 import jp.kotmw.core.nms.particle.ParticleAPI.EnumParticle;
 import jp.kotmw.core.nms.particle.PixelArtParticle;
 import jp.kotmw.core.nms.particle.magicsquare.Magic_square;
-import net.minecraft.server.v1_12_R1.NBTTagCompound;
-import net.minecraft.server.v1_12_R1.TileEntity;
-import net.minecraft.server.v1_12_R1.TileEntityEnchantTable;
 
 public class Main extends JavaPlugin implements Listener{
 	
@@ -62,7 +54,7 @@ public class Main extends JavaPlugin implements Listener{
 					int count = 0;
 					@Override
 					public void run() {
-						if(count >= 100) {
+						if(count > 100) {
 							this.cancel();
 							return;
 						}
@@ -190,24 +182,5 @@ public class Main extends JavaPlugin implements Listener{
 			break;
 		}
 		return block;
-	}
-	
-	@EventHandler
-	public void onPlace(BlockPlaceEvent event) {
-		if(event.getBlock().getType() != Material.ENCHANTMENT_TABLE)
-			return;
-		Player player = event.getPlayer();
-		Location location = event.getBlock().getLocation();
-		CraftWorld world = (CraftWorld) player.getLocation().getWorld();
-		TileEntity tileEntity = world.getTileEntityAt(location.getBlockX(), location.getBlockY(), location.getBlockZ());
-		Bukkit.getScheduler().runTaskLater(this, () -> {
-			NBTTagCompound tagCompound = tileEntity.d();
-			tagCompound.setInt("x", location.getBlockX());
-			tagCompound.setInt("y", location.getBlockY()+2);
-			tagCompound.setInt("z", location.getBlockZ());
-			tileEntity.load(tagCompound);
-			TileEntityEnchantTable enchantTable = (TileEntityEnchantTable) tileEntity;
-			((CraftPlayer)player).getHandle().playerConnection.sendPacket(enchantTable.getUpdatePacket());
-		}, 5);
 	}
 }
