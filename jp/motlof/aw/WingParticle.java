@@ -12,11 +12,11 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import jp.kotmw.core.Polar_coordinate;
+import jp.kotmw.core.api.particle.EnumParticle;
+import jp.kotmw.core.api.particle.Particle;
 import jp.kotmw.core.nms.DetailsColor;
-import jp.kotmw.core.nms.Polar_coordinates;
 import jp.kotmw.core.nms.DetailsColor.DetailsColorType;
-import jp.kotmw.core.nms.particle.ParticleAPI;
-import jp.kotmw.core.nms.particle.ParticleAPI.EnumParticle;
 
 public class WingParticle extends BukkitRunnable {
 	
@@ -45,7 +45,7 @@ public class WingParticle extends BukkitRunnable {
 				for(int y = 0; y < h; y++) {
 					if(new Color(image.getRGB(x, y), true).getAlpha() == 0)
 						continue;
-					Polar_coordinates pCoodinates = new Polar_coordinates(new Location(location.getWorld(), x*separate, y*separate, 0)).add(0, 0, Math.toRadians(180));
+					Polar_coordinate pCoodinates = new Polar_coordinate(new Location(location.getWorld(), x*separate, y*separate, 0)).add(0, 0, Math.toRadians(180));
 					sendParticle(location.clone().add(pCoodinates.rotation_Yaxis(Math.toRadians(-30-location.getYaw()))).add(0, h*separate, 0), color);
 					if(i == 1) {
 						sendParticle(location.clone().add(pCoodinates.rotation_Yaxis(Math.toRadians(-150-location.getYaw()))).add(0, h*separate, 0), color);
@@ -58,7 +58,7 @@ public class WingParticle extends BukkitRunnable {
 				for(int y = 0; y < h2; y++) {
 					if(new Color(image2.getRGB(x, y), true).getAlpha() == 0)
 						continue;
-					Polar_coordinates pCoodinates = new Polar_coordinates(new Location(location.getWorld(), x*separate, y*separate, 0)).add(0, 0, Math.toRadians(150));
+					Polar_coordinate pCoodinates = new Polar_coordinate(new Location(location.getWorld(), x*separate, y*separate, 0)).add(0, 0, Math.toRadians(150));
 					sendParticle(location.clone().add(pCoodinates.rotation_Yaxis(Math.toRadians(-60-location.getYaw()))).add(0, 2.5, 0), color);
 					if(i == 1) {
 						sendParticle(location.clone().add(pCoodinates.rotation_Yaxis(Math.toRadians(-120-location.getYaw()))).add(0, 2.5, 0), color);
@@ -71,6 +71,6 @@ public class WingParticle extends BukkitRunnable {
 	private void sendParticle(Location location, DetailsColor color) {
 		for(Player player : Bukkit.getOnlinePlayers())
 			if(player.getWorld().getName().equalsIgnoreCase(location.getWorld().getName()))
-				new ParticleAPI.Particle(EnumParticle.REDSTONE, location, color.getRed(), color.getGreen(), color.getBlue(), 1).sendParticle(player);
+				new Particle(EnumParticle.REDSTONE, location, color.getRed(), color.getGreen(), color.getBlue(), 1).sendParticle(player);
 	}
 }

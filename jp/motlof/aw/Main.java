@@ -20,8 +20,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BlockIterator;
 import org.bukkit.util.EulerAngle;
 
+import jp.kotmw.core.api.particle.EnumParticle;
 import jp.kotmw.core.nms.Translate;
-import jp.kotmw.core.nms.particle.ParticleAPI.EnumParticle;
 import jp.kotmw.core.nms.particle.PixelArtParticle;
 import jp.kotmw.core.nms.particle.magicsquare.Magic_square;
 
@@ -50,19 +50,7 @@ public class Main extends JavaPlugin implements Listener{
 		if(s instanceof BlockCommandSender) {
 			if(args.length == 2 && "magic".equalsIgnoreCase(args[0])) {
 				Magic_square square = new Magic_square(((BlockCommandSender) s).getBlock().getLocation(), args[1]);
-				BukkitRunnable runnable = new BukkitRunnable() {
-					int count = 0;
-					@Override
-					public void run() {
-						if(count > 100) {
-							this.cancel();
-							return;
-						}
-						square.show();
-						count++;
-					}
-				};
-				runnable.runTaskTimer(this, 0, 1);
+				square.runMilliTimer(0, 50, 100);
 			}
 		}
 		if(!(s instanceof Player))
@@ -118,18 +106,8 @@ public class Main extends JavaPlugin implements Listener{
 			if(sBukkitRunnable != null) sBukkitRunnable.cancel();
 			if(args[1] == null)
 				return false;
-			try { 
-				PixelArtParticle stringParticle = new PixelArtParticle(args[1], player.getLocation(), Double.parseDouble(args[2]), EnumParticle.REDSTONE, new Font(args[3], Font.PLAIN, 24));
-				sBukkitRunnable = new BukkitRunnable() {
-					@Override
-					public void run() {
-						stringParticle.show();
-					}
-				};
-			} catch (IllegalArgumentException e) {
-				player.sendMessage("そのフォントは使用できません");
-			}
-			sBukkitRunnable.runTaskTimer(Main.main, 0, 1);
+			PixelArtParticle stringParticle = new PixelArtParticle(args[1], player.getLocation(), Double.parseDouble(args[2]), EnumParticle.REDSTONE, new Font(args[3], Font.PLAIN, 24));
+			stringParticle.runMilliTimer(0, 20, 100);
 			return true;
 		}
 		if(args.length == 2 && "wing".equalsIgnoreCase(args[0])) {
